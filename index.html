@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailyFlow — Habit Tracker</title>
+</head>
+<body style="margin:0; font-family:Inter,Arial,sans-serif; background:#f5f6fb; color:#20233a;">
+  <div style="max-width:1180px; margin:0 auto; padding:28px 18px 48px;">
+    <header style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:28px;">
+      <div>
+        <div style="font-size:13px; font-weight:800; letter-spacing:2px; color:#7667ed; text-transform:uppercase;">✦ DailyFlow</div>
+        <h1 style="font-size:clamp(28px,4vw,40px); margin:8px 0 6px; letter-spacing:-1.2px;">Build better days.</h1>
+        <p style="margin:0; color:#777b91;">Small habits. Real progress. One day at a time.</p>
+      </div>
+      <div style="background:white; border:1px solid #e9eaf2; border-radius:16px; padding:13px 16px; box-shadow:0 8px 25px #25264a08;">
+        <div style="font-size:11px; color:#85899d; text-transform:uppercase; letter-spacing:1px;">Today</div>
+        <div id="todayLabel" style="font-weight:800; margin-top:5px;"></div>
+      </div>
+    </header>
+
+    <section style="display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:22px;">
+      <div style="background:linear-gradient(135deg,#7667ed,#9b70f5); color:white; border-radius:20px; padding:21px; box-shadow:0 12px 28px #7667ed30;">
+        <div style="font-size:13px; opacity:.85;">Today's completion</div>
+        <div id="completionStat" style="font-size:34px; font-weight:850; margin:10px 0 5px;">0%</div>
+        <div style="font-size:12px; opacity:.85;">Keep showing up ✨</div>
+      </div>
+      <div style="background:white; border:1px solid #e9eaf2; border-radius:20px; padding:21px;">
+        <div style="font-size:13px; color:#85899d;">Habits created</div>
+        <div id="habitStat" style="font-size:34px; font-weight:850; margin:10px 0 5px;">0</div>
+        <div style="font-size:12px; color:#85899d;">Your personal routine</div>
+      </div>
+      <div style="background:white; border:1px solid #e9eaf2; border-radius:20px; padding:21px;">
+        <div style="font-size:13px; color:#85899d;">Completed today</div>
+        <div id="doneStat" style="font-size:34px; font-weight:850; margin:10px 0 5px;">0 / 0</div>
+        <div style="font-size:12px; color:#85899d;">Every check counts</div>
+      </div>
+      <div style="background:white; border:1px solid #e9eaf2; border-radius:20px; padding:21px;">
+        <div style="font-size:13px; color:#85899d;">Best daily score</div>
+        <div id="bestStat" style="font-size:34px; font-weight:850; margin:10px 0 5px;">0%</div>
+        <div style="font-size:12px; color:#85899d;">Your personal best</div>
+      </div>
+    </section>
+
+    <main style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr)); gap:20px; align-items:start;">
+      <section style="background:white; border:1px solid #e9eaf2; border-radius:22px; padding:22px; box-shadow:0 8px 25px #25264a06;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px;">
+          <div>
+            <h2 style="margin:0; font-size:20px;">Your daily habits</h2>
+            <p style="margin:6px 0 0; color:#85899d; font-size:13px;">Check off what you finish today.</p>
+          </div>
+          <span style="font-size:23px;">☀️</span>
+        </div>
+
+        <form id="habitForm" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
+          <input id="habitName" required maxlength="45" placeholder="Add a habit (e.g. Read 10 pages)" style="flex:1; min-width:170px; padding:13px 14px; border:1px solid #e2e4ef; border-radius:12px; outline:none; font-size:14px; box-sizing:border-box;">
+          <select id="habitIcon" aria-label="Choose habit icon" style="padding:12px; border:1px solid #e2e4ef; border-radius:12px; background:white; font-size:18px;">
+            <option value="📚">📚</option><option value="💧">💧</option><option value="🏃">🏃</option><option value="🧘">🧘</option><option value="💻">💻</option><option value="✍️">✍️</option><option value="🥗">🥗</option><option value="🌙">🌙</option><option value="🎯">🎯</option>
+          </select>
+          <button type="submit" style="border:0; border-radius:12px; padding:12px 16px; color:white; background:#7667ed; font-weight:800; cursor:pointer;">+ Add</button>
+        </form>
+
+        <div id="habitList" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <div id="emptyState" style="display:none; text-align:center; padding:30px 12px; color:#85899d;">
+          <div style="font-size:35px; margin-bottom:8px;">🌱</div>
+          <strong style="color:#42455d;">Your next chapter starts here.</strong>
+          <p style="font-size:13px;">Add your first habit above to get started.</p>
+        </div>
+      </section>
+
+      <section style="background:white; border:1px solid #e9eaf2; border-radius:22px; padding:22px; box-shadow:0 8px 25px #25264a06;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
+          <div>
+            <h2 style="margin:0; font-size:20px;">Performance overview</h2>
+            <p style="margin:6px 0 0; color:#85899d; font-size:13px;">Your completion trend over the last 7 days.</p>
+          </div>
+          <span style="font-size:23px;">📈</span>
+        </div>
+        <div style="width:100%; overflow:hidden;">
+          <svg id="performanceChart" viewBox="0 0 340 205" role="img" aria-label="Habit completion graph for the last seven days" style="width:100%; height:auto; display:block;"></svg>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding:14px; border-radius:14px; background:#f7f6ff;">
+          <div>
+            <div style="font-size:12px; color:#85899d;">7-day average</div>
+            <div id="averageStat" style="font-size:22px; font-weight:850; color:#7667ed; margin-top:4px;">0%</div>
+          </div>
+          <div style="font-size:12px; color:#777b91; text-align:right; max-width:145px;">Progress, not perfection. Keep going 💜</div>
+        </div>
+        <h3 style="font-size:15px; margin:22px 0 12px;">Habit completion today</h3>
+        <div id="habitBreakdown" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </section>
+    </main>
+
+    <footer style="text-align:center; color:#989bb0; font-size:12px; padding-top:26px;">Made for your growth ✦ Your data is saved in this browser.</footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "dailyflow_habit_tracker_v1";
+    const today = new Date();
+    const dateKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    document.getElementById("todayLabel").textContent = today.toLocaleDateString(undefined, {weekday:"short", month:"short", day:"numeric", year:"numeric"});
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && Array.isArray(saved.habits) && saved.history) return saved;
+      } catch (e) {}
+      return {
+        habits: [
+          {id: 1, name: "Read for 15 minutes", icon: "📚"},
+          {id: 2, name: "Drink 8 glasses of water", icon: "💧"},
+          {id: 3, name: "Practice coding", icon: "💻"}
+        ],
+        history: {}
+      };
+    }
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (e) { alert("Your browser could not save data. Try enabling local storage."); }
+    }
+    function completedSet(key = dateKey(new Date())) {
+      return new Set(state.history[key] || []);
+    }
+    function percentFor(key) {
+      if (!state.habits.length) return 0;
+      const done = new Set(state.history[key] || []);
+      return Math.round(state.habits.filter(h => done.has(h.id)).length / state.habits.length * 100);
+    }
+    function toggleHabit(id) {
+      const key = dateKey(new Date());
+      const done = completedSet(key);
+      done.has(id) ? done.delete(id) : done.add(id);
+      state.history[key] = [...done];
+      saveState();
+      render();
+    }
+    function removeHabit(id) {
+      if (!confirm("Delete this habit? Its completion history will no longer count.")) return;
+      state.habits = state.habits.filter(h => h.id !== id);
+      Object.keys(state.history).forEach(k => state.history[k] = (state.history[k] || []).filter(x => x !== id));
+      saveState();
+      render();
+    }
+    document.getElementById("habitForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const input = document.getElementById("habitName");
+      const name = input.value.trim();
+      if (!name) return;
+      state.habits.push({id: Date.now() + Math.floor(Math.random()*1000), name, icon: document.getElementById("habitIcon").value});
+      saveState();
+      input.value = "";
+      render();
+      input.focus();
+    });
+
+    function renderHabits() {
+      const list = document.getElementById("habitList");
+      const empty = document.getElementById("emptyState");
+      const done = completedSet();
+      list.innerHTML = "";
+      empty.style.display = state.habits.length ? "none" : "block";
+      state.habits.forEach(h => {
+        const isDone = done.has(h.id);
+        const item = document.createElement("div");
+        item.style.cssText = `display:flex; align-items:center; gap:12px; padding:13px; border:1px solid ${isDone ? "#d9f3e7" : "#ececf4"}; background:${isDone ? "#f4fcf8" : "#fff"}; border-radius:15px; transition:all .2s;`;
+        const icon = document.createElement("div");
+        icon.textContent = h.icon;
+        icon.style.cssText = "width:43px;height:43px;display:grid;place-items:center;background:#f2f0ff;border-radius:13px;font-size:21px;flex-shrink:0;";
+        const details = document.createElement("div");
+        details.style.cssText = "flex:1;min-width:0;";
+        const name = document.createElement("div");
+        name.textContent = h.name;
+        name.style.cssText = `font-size:14px;font-weight:750;overflow-wrap:anywhere;color:${isDone ? "#25835c" : "#343750"};`;
+        const status = document.createElement("div");
+        status.textContent = isDone ? "Completed — nice work!" : "One step at a time";
+        status.style.cssText = "font-size:11px;color:#85899d;margin-top:5px;";
+        details.append(name, status);
+        const check = document.createElement("button");
+        check.type = "button";
+        check.textContent = isDone ? "✓" : "○";
+        check.setAttribute("aria-label", (isDone ? "Mark incomplete: " : "Complete: ") + h.name);
+        check.style.cssText = `width:37px;height:37px;border:0;border-radius:12px;background:${isDone ? "#32bd84" : "#f0efff"};color:${isDone ? "white" : "#7667ed"};font-size:22px;font-weight:800;cursor:pointer;flex-shrink:0;`;
+        check.addEventListener("click", () => toggleHabit(h.id));
+        const del = document.createElement("button");
+        del.type = "button";
+        del.textContent = "×";
+        del.setAttribute("aria-label", "Delete " + h.name);
+        del.style.cssText = "border:0;background:transparent;color:#a0a2b2;font-size:22px;cursor:pointer;padding:4px;";
+        del.addEventListener("click", () => removeHabit(h.id));
+        item.append(icon, details, check, del);
+        list.appendChild(item);
+      });
+    }
+    function renderStats() {
+      const done = completedSet();
+      const count = state.habits.filter(h => done.has(h.id)).length;
+      const percent = percentFor(dateKey(new Date()));
+      document.getElementById("completionStat").textContent = percent + "%";
+      document.getElementById("habitStat").textContent = state.habits.length;
+      document.getElementById("doneStat").textContent = `${count} / ${state.habits.length}`;
+      const allKeys = Object.keys(state.history);
+      const best = allKeys.length ? Math.max(...allKeys.map(percentFor)) : 0;
+      document.getElementById("bestStat").textContent = best + "%";
+      const recent = Array.from({length:7}, (_, i) => {
+        const d = new Date(); d.setDate(d.getDate() - (6-i));
+        return {key: dateKey(d), label: d.toLocaleDateString(undefined,{weekday:"short"}), date: d.getDate(), value: percentFor(dateKey(d))};
+      });
+      document.getElementById("averageStat").textContent = Math.round(recent.reduce((sum,d)=>sum+d.value,0)/7) + "%";
+      drawChart(recent);
+      renderBreakdown(done);
+    }
+    function drawChart(data) {
+      const svg = document.getElementById("performanceChart");
+      const ns = "http://www.w3.org/2000/svg";
+      svg.innerHTML = "";
+      const make = (tag, attrs, content) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs || {}).forEach(([k,v]) => el.setAttribute(k,v));
+        if (content !== undefined) el.textContent = content;
+        svg.appendChild(el);
+        return el;
+      };
+      const left=32, right=326, top=15, bottom=163, chartH=bottom-top;
+      [0,25,50,75,100].forEach(v=>{
+        const y=bottom-(v/100)*chartH;
+        make("line",{x1:left,y1:y,x2:right,y2:y,stroke:"#ececf4","stroke-dasharray":"3 4"});
+        make("text",{x:24,y:y+4,"text-anchor":"end",fill:"#9699ac","font-size":"10"},v);
+      });
+      const step=(right-left)/6;
+      const pts=data.map((d,i)=>({x:left+i*step,y:bottom-(d.value/100)*chartH,...d}));
+      const linePath=pts.map((p,i)=>(i?"L":"M")+p.x+" "+p.y).join(" ");
+      const areaPath=`${linePath} L ${right} ${bottom} L ${left} ${bottom} Z`;
+      make("path",{d:areaPath,fill:"#7667ed",opacity:".10"});
+      make("path",{d:linePath,fill:"none",stroke:"#7667ed","stroke-width":"3","stroke-linecap":"round","stroke-linejoin":"round"});
+      pts.forEach(p=>{
+        make("circle",{cx:p.x,cy:p.y,r:"4.5",fill:"#fff",stroke:"#7667ed","stroke-width":"2.5"});
+        make("text",{x:p.x,y:188,"text-anchor":"middle",fill:"#85899d","font-size":"10"},p.label);
+      });
+    }
+    function renderBreakdown(done) {
+      const target = document.getElementById("habitBreakdown");
+      target.innerHTML = "";
+      if (!state.habits.length) {
+        target.textContent = "Add a habit to see your progress here.";
+        target.style.color = "#85899d";
+        target.style.fontSize = "13px";
+        return;
+      }
+      state.habits.forEach(h=>{
+        const isDone=done.has(h.id);
+        const row=document.createElement("div");
+        const top=document.createElement("div");
+        top.style.cssText="display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:7px;";
+        const label=document.createElement("span");
+        label.textContent=h.icon+" "+h.name;
+        label.style.cssText="color:#555970;overflow-wrap:anywhere;";
+        const value=document.createElement("strong");
+        value.textContent=isDone?"100%":"0%";
+        value.style.color=isDone?"#2eaf7c":"#85899d";
+        top.append(label,value);
+        const track=document.createElement("div");
+        track.style.cssText="height:7px;background:#f0eff7;border-radius:99px;overflow:hidden;";
+        const bar=document.createElement("div");
+        bar.style.cssText=`height:100%;width:${isDone?100:0}%;background:${isDone?"#32bd84":"#7667ed"};border-radius:99px;transition:width .3s;`;
+        track.appendChild(bar);
+        row.append(top,track);
+        target.appendChild(row);
+      });
+    }
+    function render() {
+      renderHabits();
+      renderStats();
+    }
+    render();
+  </script>
+</body>
+</html>
